@@ -67,9 +67,9 @@ const LoginForm = () => {
     };
     getData();
   };
-  // if (isUser) {
-  //   router.push("/newsfeed");
-  // }
+  if (isUser) {
+    router.push("/newsfeed");
+  }
   return (
     <form className="max-w-sm bg-sidebar p-4 rounded-xl mx-auto">
       {error && (
