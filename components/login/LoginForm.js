@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useContext } from "react";
-import UserContext from "@/store/user-context";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import useInput from "../hooks/useInput";
 import Link from "next/link";
@@ -12,7 +11,6 @@ const isEmail = (value) => value.includes("@");
 
 const LoginForm = () => {
   const router = useRouter();
-  const userCtx = useContext(UserContext);
 
   const [isUser, setIsUser] = useState(false);
   const [error, setError] = useState(false);
@@ -54,24 +52,26 @@ const LoginForm = () => {
 
       setError(data.error);
       setIsUser(data.isUser);
+      console.log(data.user);
+      localStorage.setItem("userData", JSON.stringify(data.user));
     };
     await authenticate(emailValue, passwordValue);
     console.log(error);
-    const getData = async () => {
-      const response = await fetch(`../../api/login`);
-      if (response.ok) {
-        const data = await response.json();
-        // userCtx = data.userData;
-        console.log(data);
-      }
-    };
-    getData();
+    // const getData = async () => {
+    //   const response = await fetch(`../../api/login`);
+    //   if (response.ok) {
+    //     const data = await response.json();
+    //     // userCtx = data.userData;
+    //     console.log(data);
+    //   }
+    // };
+    // getData();
   };
   if (isUser) {
-    router.push("/newsfeed");
+    router.push("/profile");
   }
   return (
-    <form className="max-w-sm bg-sidebar p-4 rounded-xl mx-auto">
+    <form className="max-w-sm bg-sidebar rounded-xl p-4 m-2 mx-2 md:mx-auto">
       {error && (
         <p className="my-2 text-xs text-red-800 dark:text-red-400 font-semibold font-semiboldfont-semibold">
           *Invalid Credentials! Try again.

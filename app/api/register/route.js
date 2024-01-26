@@ -16,7 +16,21 @@ export const POST = async (request) => {
     );
     const user = userCredentials.user;
     await addDoc(collection(db, "users"), { id: user.uid, ...userData });
-    return NextResponse.json({ status: 200, user: true, error: false });
+
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("id", "==", userCredentials.user.uid));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      userData = { ...doc.data(), docId: doc.id };
+    });
+
+    return NextResponse.json({
+      status: 200,
+      user: true,
+      userData: userData,
+      error: false,
+    });
     // ...
   } catch (e) {
     // })

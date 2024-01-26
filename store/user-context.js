@@ -12,6 +12,8 @@ const UserContext = React.createContext({
   birth: "",
   profilePicture: "",
   coverPicture: "",
+  friends: [],
+  onSignIn: (userData) => {},
 });
 
 export default UserContext;

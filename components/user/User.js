@@ -1,8 +1,17 @@
 import Link from "next/link";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 
 const User = (props) => {
   const date = new Date(props.birth);
+  const [removed, setRemoved] = useState(false);
+
+  const removeHandler = () => {
+    setRemoved(true);
+    setTimeout(() => {
+      setRemoved(false);
+    }, 3000);
+  };
+
   return (
     <Fragment>
       <Link href="#">
@@ -13,22 +22,22 @@ const User = (props) => {
               className="my-auto w-14 h-14 rounded-xl"
             ></img>
             <div className="ml-3">
-              <text className="block text-lg font-bold">{props.name}</text>
-              <text className="block text-sm font-semibold text-gray-700">
+              <p className="block text-lg font-bold">{props.name}</p>
+              <p className="block text-sm font-semibold text-gray-700">
                 {props.email}
-              </text>
-              <text className="block text-sm font-semibold text-gray-700">
+              </p>
+              <p className="block text-sm font-semibold text-gray-700">
                 {props.profession}
-              </text>
+              </p>
             </div>
             <div className="max-lg:hidden ml-5 lg:ml-10 my-auto">
-              <text className="block text-sm font-semibold text-gray-700 mb-1">
+              <p className="block text-sm font-semibold text-gray-700 mb-1">
                 {date.toLocaleDateString()}
-              </text>
-              <text className="block text-sm font-semibold text-gray-700 mb-0.5">
+              </p>
+              <p className="block text-sm font-semibold text-gray-700 mb-0.5">
                 Male
-              </text>
-              <text className="block text-sm font-semibold text-gray-700">
+              </p>
+              <p className="block text-sm font-semibold text-gray-700">
                 <svg
                   className="inline"
                   xmlns="http://www.w3.org/2000/svg"
@@ -43,31 +52,25 @@ const User = (props) => {
                   />
                 </svg>
                 {props.location}
-              </text>
+              </p>
             </div>
           </div>
           <div className="ml-auto lg:my-auto flex lg:h-10 lg:w-72 max-lg:flex-col">
-            {props.add && (
-              <button className="inline lg:block lg:p-2 p-1 rounded-3xl bg-gradient-to-b from-black to-red-700 hover:to-red-900 ml-4 lg:ml-auto mr-2 mt-1">
-                <p className="text-center text-white font-semibold text-xs lg:text-sm leading-normal">
-                  Add Friend
-                </p>
-              </button>
-            )}
-            {!props.add && (
-              <button className="block lg:block my-auto p-2 rounded-3xl bg-gradient-to-b from-black to-red-700 hover:to-red-900 ml-4 lg:ml-auto mr-2">
-                <p className="text-center text-white font-semibold text-xs lg:text-sm leading-normal">
-                  Remove Friend
-                </p>
-              </button>
-            )}
-            {props.add && (
+            <button
+              onClick={props.onClick.bind(null, props.id)}
+              className="max-md:max-w-20 block lg:block my-auto p-2 rounded-3xl bg-gradient-to-b from-black to-red-700 hover:to-red-900 ml-4 lg:ml-auto mr-2"
+            >
+              <p className="text-center text-white font-semibold text-xs lg:text-sm leading-normal">
+                {!props.add !== true ? "Remove Friend" : "Add Friend"}
+              </p>
+            </button>
+            {/* {props.add && (
               <button className="inline lg:block lg:p-2 p-1 bg-gray-500 rounded-3xl hover:bg-gray-800 ml-4 max-lg:mt-2 lg:ml-auto mr-2">
                 <p className="text-center text-white font-semibold text-xs lg:text-sm leading-normal">
                   View Profile
                 </p>
               </button>
-            )}
+            )} */}
           </div>
         </div>
       </Link>

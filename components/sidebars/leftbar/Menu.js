@@ -1,13 +1,14 @@
 const { Fragment } = require("react");
 import MenuItem from "./MenuItem";
 
-const Menu = () => {
+const Menu = (props) => {
   return (
     <Fragment>
       <div className="font-bold text-3xl ml-4 my-6 ">Menu</div>
       <div className="ml-4 px-3 py-4 overflow-y-auto rounded-3xl bg-sidebar card dark:bg-gray-800">
         <ul className="space-y-2 font-medium">
           <MenuItem
+            onClick={props.onClick}
             SVG={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +53,8 @@ const Menu = () => {
             href={"/newsfeed"}
             pathname={"/newsfeed"}
           />
-          <MenuItem
+          {/* <MenuItem
+            onClick={props.onClick}
             SVG={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -71,8 +73,9 @@ const Menu = () => {
             bottom={true}
             pathname={"/messages"}
             href={"/messages"}
-          />
+          /> */}
           <MenuItem
+            onClick={props.onClick}
             SVG={
               <svg
                 className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -90,6 +93,7 @@ const Menu = () => {
             href={"/friends"}
           />
           <MenuItem
+            onClick={props.onClick}
             SVG={
               <img
                 width="24"
@@ -104,6 +108,30 @@ const Menu = () => {
             href={"/profile"}
           />
           <MenuItem
+            onClick={props.onClick}
+            SVG={
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+            }
+            text={"Search"}
+            bottom={false}
+            pathname={"/search"}
+            href={"/search"}
+          />
+          {/* <MenuItem
+            onClick={props.onClick}
             SVG={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +150,7 @@ const Menu = () => {
             bottom={false}
             href={"/edit-profile"}
             pathname={"/edit-profile"}
-          />
+          /> */}
         </ul>
       </div>
     </Fragment>

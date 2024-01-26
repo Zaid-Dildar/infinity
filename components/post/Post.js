@@ -1,25 +1,75 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import Comments from "./Comments";
+import HeartIcon from "./HeartIcon";
+import CommentsIcon from "./CommentsIcon";
 
 const Post = (props) => {
-  const [showComments, setShowComments] = useState(false);
+  const [userData, setUserData] = useState();
 
-  const showCommentsHandler = () => {
-    setShowComments(true);
+  useEffect(() => {
+    setUserData(JSON.parse(localStorage.getItem("userData")));
+  }, []);
+
+  const [clicked, setClicked] = useState(false);
+  const [likes, setLikes] = useState(props.likes);
+
+  const [showComments, setShowComments] = useState(false);
+  const [added, setAdded] = useState(props.comments);
+
+  const commentHandler = () => {
+    setAdded((prevAdded) => prevAdded + 1);
   };
-  console.log(props.id);
+  const likeHandler = () => {
+    setClicked((prevClicked) => !prevClicked);
+  };
+
+  useEffect(() => {
+    if (clicked) {
+      setLikes((prevLikes) => prevLikes + 1);
+      console.log("likes:", likes);
+    } else {
+      setLikes(props.likes);
+      console.log("o-likes:", likes);
+    }
+  }, [clicked]);
+  const showCommentsHandler = () => {
+    setShowComments((prevShowComments) => !prevShowComments);
+  };
   const imageUrl = props.imageUrl;
+  useEffect(() => {
+    return async () => {
+      console.log(likes);
+      console.log(props.likes);
+      console.log("Unmounting");
+
+      if (props.comments !== added || props.likes !== likes) {
+        const response = await fetch(`../../api/postUpdated`, {
+          method: "POST",
+          body: JSON.stringify({
+            postId: props.id,
+            likes: likes,
+            comments: added,
+          }),
+          headers: {
+            "CONTENT-TYPE": "application/json",
+          },
+        });
+        const data = await response.json();
+        console.log(data);
+      }
+    };
+  });
 
   return (
     <Fragment>
-      <div className="mx-8 mt-6 lg:mx-20">
+      <div className=" mx-8 mt-6 mb-15 lg:mx-20">
         <div
           style={{ backgroundImage: `url(${imageUrl})` }}
-          className={`flex w-lg min-h-48 lg:min-h-72 rounded-3xl bg-cover bg-center bg-background bg-no-repeat mb-6 `}
+          className={`flex w-lg min-h-48 lg:min-h-72 rounded-3xl bg-cover bg-center bg-background bg-no-repeat mb-0 `}
         >
-          <div className="flex w-full mt-auto lg:w-96 h-8 ml-12 rounded-xl bg-gradient-to-b from-background/30 to-red-900/80 to-30%">
+          <div className="flex w-full mt-auto lg:w-96 h-8 mr-1 ml-12 rounded-3xl bg-gradient-to-b from-background/30 to-red-900/80 to-30%">
             <p className="my-auto ml-3 text-white font-semibold">
               {props.caption}
             </p>
@@ -31,39 +81,23 @@ const Post = (props) => {
               src={props.profilePicture}
               className="w-8 h-8 rounded-xl"
             ></img>
-            <p className="lg:my-1 ml-2 text-gray-600 text-md text-base font-normal">
+            <p className="my-1 ml-2 text-gray-600 text-md text-base font-normal">
               {props.email}
             </p>
           </div>
           <div className="flex">
-            <button className="mr-2">
-              <img
-                className="inline hover:bg-red-400 hover:ring ring-red-800 rounded-xl"
-                width="24"
-                height="24"
-                src="https://img.icons8.com/material-outlined/24/like--v1.png"
-                alt="like--v1"
-              />{" "}
-              <p className="text-xs lg:text-base my-auto font-semibold">
-                {props.likes}
-              </p>
+            <button className="mr-2 pr-1" onClick={likeHandler}>
+              <HeartIcon added={clicked} likes={props.likes} />
             </button>
             <button onClick={showCommentsHandler}>
-              <img
-                className="ml-2 inline hover:bg-gray-400 hover:ring ring-gray-800 rounded-xl"
-                width="24"
-                height="24"
-                src="https://img.icons8.com/material-outlined/24/comments--v1.png"
-                alt="comments--v1"
-              />{" "}
-              <p className="text-xs lg:text-base my-auto font-semibold">
-                {props.comments}
-              </p>
+              <CommentsIcon comments={added} />
             </button>
           </div>
         </div>
+        {showComments && (
+          <Comments onAddComment={commentHandler} postId={props.id} />
+        )}
       </div>
-      {showComments && <Comments postId={props.id} />}
     </Fragment>
   );
 };

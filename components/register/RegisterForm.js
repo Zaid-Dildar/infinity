@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { Datepicker } from "flowbite-react";
-import { TextInput } from "flowbite-react";
+import { TextInput, FileInput, Label } from "flowbite-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import useInput from "../hooks/useInput";
 
 const isSame = (value1, value2) => value1 === value2;
@@ -17,6 +17,9 @@ const RegisterForm = () => {
   const [birthValue, setBirthValue] = useState(false);
 
   const router = useRouter();
+
+  const profileUrl = useRef();
+  const coverUrl = useRef();
 
   const {
     value: firstNameValue,
@@ -97,6 +100,24 @@ const RegisterForm = () => {
 
   const registerHandler = async (event) => {
     event.preventDefault();
+    const formData = new FormData();
+    formData.append("file", profileUrl.current.files[0]);
+
+    const response = await fetch(`../../api/newsfeed/image`, {
+      method: "POST",
+      body: formData,
+    });
+    const imageData = await response.json();
+    const profilePicUrl = imageData.url;
+    const formData1 = new FormData();
+    formData1.append("file", coverUrl.current.files[0]);
+
+    const response1 = await fetch(`../../api/newsfeed/image`, {
+      method: "POST",
+      body: formData1,
+    });
+    const imageData1 = await response1.json();
+    const coverPhotoUrl = imageData1.url;
     if (!formIsValid) {
       return;
     }
@@ -118,6 +139,8 @@ const RegisterForm = () => {
             contact: contactValue,
             birth: birthValue,
             profession: professionValue,
+            profilePic: profilePicUrl,
+            coverPhoto: coverPhotoUrl,
           },
         }),
         headers: {
@@ -129,6 +152,7 @@ const RegisterForm = () => {
 
       setError(data.error);
       setUser(data.user);
+      localStorage.setItem("userData", JSON.stringify(data.userData));
     };
     await createUser(emailValue, passwordValue);
   };
@@ -351,6 +375,16 @@ const RegisterForm = () => {
             helperText={`${!contactHasError ? "" : "Contact info invallid!"}`}
             required
           />
+        </div>
+      </div>
+      <div className="grid lg:grid-cols-2 lg:gap-6 mt-1">
+        <div className="relative z-0 w-full group">
+          <Label htmlFor="profilePic" value="Profile Picture" />
+          <FileInput ref={profileUrl} id="profilePic" />
+        </div>
+        <div className="relative z-0 w-full group">
+          <Label htmlFor="coverPhoto" value="Cover Photo" />
+          <FileInput ref={coverUrl} id="coverPhoto" />
         </div>
       </div>
       <div className="bg-sidebar flex pt-4">

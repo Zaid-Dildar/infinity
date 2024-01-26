@@ -4,7 +4,10 @@ import { usePathname } from "next/navigation";
 const MenuItem = (props) => {
   const pathname = usePathname();
   return (
-    <li className={`${props.bottom ? "border-gray-700 border-b-2" : " "}`}>
+    <li
+      onClick={props.onClick}
+      className={`${props.bottom ? "border-gray-700 border-b-2" : " "}`}
+    >
       <Link
         className={`flex items-center p-2 text-gray-900 rounded-lg dark:text-white ${
           pathname === props.pathname

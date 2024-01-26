@@ -2,16 +2,28 @@
 
 import { Fragment } from "react";
 import Post from "../post/Post";
-import { useContext, useState, useEffect } from "react";
-import UserContext from "@/store/user-context";
+import { useState, useEffect } from "react";
 
 const Profile = () => {
-  const userCtx = useContext(UserContext);
-  const date = new Date(userCtx.birth);
+  const [storedData, setStoredData] = useState({
+    lastName: "",
+    birth: "",
+    city: "",
+    contact: "",
+    country: "",
+    coverPhoto: "",
+    email: "",
+    firstName: "",
+    id: "",
+    profession: "",
+    profilePic: "",
+  });
 
   const [posts, setPosts] = useState([]);
   const getData = async () => {
-    const response = await fetch(`../../api/profile?userId=${userCtx.id}`);
+    const response = await fetch(
+      `../../api/profile?userId=${storedData.docId}`
+    );
     if (response.ok) {
       const data = await response.json();
       setPosts(data.postsData);
@@ -19,28 +31,34 @@ const Profile = () => {
     }
     console.log(response);
   };
-
   useEffect(() => {
-    getData();
+    setStoredData(JSON.parse(localStorage.getItem("userData")));
   }, []);
+  useEffect(() => {
+    console.log(storedData);
+    if (storedData.id !== "") {
+      getData();
+    }
+  }, [storedData]);
 
+  const date = new Date(storedData.birth);
   return (
     <Fragment>
       <div
-        style={{ backgroundImage: `url(${userCtx.coverPhoto})` }}
+        style={{ backgroundImage: `url(${storedData.coverPhoto})` }}
         className="h-52 w-full mx-2 flex rounded-3xl flex-col-reverse bg-cover bg-center bg-background bg-no-repeat mb-6 "
       >
         <div className="flex w-sm lg:w-96 h-32 ml-12 mb-2 rounded-xl bg-gradient-to-b from-background/30 to-red-900/60 to-30%">
           <img
-            src={userCtx.profilePic}
+            src={storedData.profilePic}
             className="h-full rounded-xl border-4 border-red-900/80"
           />
           <div className="flex flex-col ml-3">
             <p className="text-xl font-semibold text-white mb-2 mt-1">
-              {`${userCtx.firstName} ${userCtx.lastName}`}
+              {`${storedData.firstName} ${storedData.lastName}`}
             </p>
             <p className="text-xs font-normal text-white mb-1">
-              {userCtx.email}
+              {storedData.email}
             </p>
             <p className="text-xs font-normal text-white mb-1">
               {date.toLocaleDateString()}
@@ -59,15 +77,15 @@ const Profile = () => {
                   fill="white"
                 />
               </svg>
-              {`${userCtx.city}, ${userCtx.country}`}
+              {`${storedData.city}, ${storedData.country}`}
             </p>
             <p className="text-xs font-normal text-white mb-1">
-              {userCtx.profession}
+              {storedData.profession}
             </p>
           </div>
         </div>
       </div>
-      <div className="font-bold text-3xl ml-8 my-6 pt-4 border-t-4 border-gray-500">
+      <div className="font-bold text-3xl ml-8 my-6 py-4 border-y-4 border-gray-500">
         Timeline
       </div>
       {posts.map((post, index) => {
@@ -84,6 +102,13 @@ const Profile = () => {
           />
         );
       })}
+      {posts.length === 0 && (
+        <div>
+          <p className="text-center text-lg font-semibold">
+            You haven't made any posts yet.
+          </p>
+        </div>
+      )}
     </Fragment>
   );
 };

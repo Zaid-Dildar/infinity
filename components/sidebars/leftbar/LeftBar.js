@@ -1,15 +1,30 @@
 "use client";
 import Link from "next/link";
 import { Fragment } from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Menu from "./Menu";
-import Suggestion from "../suggestions/Sugggestion";
+import Suggestion from "../../suggestions/Sugggestion";
+import Suggestions from "./Suggestions";
 
 const LeftBar = () => {
+  const [userData, setUserdData] = useState({
+    lastName: "",
+    birth: "",
+    city: "",
+    contact: "",
+    country: "",
+    coverPhoto: "",
+    email: "",
+    firstName: "",
+    id: "",
+    profession: "",
+    profilePic: "",
+  });
+
   const [show, setShow] = useState(false);
-  // useEffect(() => {
-  //   setShow(false);
-  // }, []);
+  useEffect(() => {
+    setUserdData(JSON.parse(localStorage.getItem("userData")));
+  }, []);
 
   const sidebarToggleHandler = () => {
     setShow((prevShow) => !prevShow);
@@ -41,7 +56,7 @@ const LeftBar = () => {
       </button>
       <aside
         id="default-sidebar"
-        className={`fixed top-0 pr-2 border-r-4 border-r-gray-600 left-0 z-40 w-64 h-screen transition-transform ${
+        className={`fixed top-0 pr-2 border-r-4 border-r-gray-600 left-0 z-40 w-64 overflow-y-auto h-screen transition-transform ${
           !show ? "-translate-x-full" : " "
         } lg:translate-x-0 bg-background`}
         onBlur={sidebarToggleHandler}
@@ -100,26 +115,25 @@ const LeftBar = () => {
         <Link href="/profile">
           <div className="flex ml-4 px-3 py-4 overflow-y-auto rounded-3xl bg-sidebar card dark:bg-gray-800">
             <img
-              src="Rectangle 2.png"
-              className="ml-1 w-13 h-13 rounded-xl"
+              src={userData.profilePic}
+              className="ml-1 w-10 h-13 rounded-xl"
             ></img>
             <div className="ml-3">
-              <h3 className="text-lg font-semibold">Mike Wallace</h3>
+              <h3 className="text-lg font-semibold">{`${userData.firstName} ${userData.lastName}`}</h3>
               <p className="text-gray-600 text-base font-normal">
-                tk@gmail.com
+                {userData.email}
               </p>
             </div>
           </div>
         </Link>
-        <Menu />
+        <Menu onClick={sidebarToggleHandler} />
+        <Suggestions />
       </aside>
       {show && (
         <div
           onClick={sidebarToggleHandler}
           className="lg:hidden w-full min-h-screen backdrop-blur-[2px] fixed top-0 z-30 bg-black/10"
-        >
-          sdgs
-        </div>
+        ></div>
       )}
     </Fragment>
   );

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/firebase.config";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { collection, addDoc, getDoc, query, where } from "firebase/firestore";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase.config";
 
 export const GET = async () => {
@@ -25,6 +25,7 @@ export const POST = async (request) => {
   const data = await request.json();
   const { email } = data;
   const { password } = data;
+  let userData = {};
   try {
     const userCredentials = await signInWithEmailAndPassword(
       auth,
@@ -33,11 +34,20 @@ export const POST = async (request) => {
     );
     // .then((userCredential) => {
     // Signed in
+
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where("id", "==", userCredentials.user.uid));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      userData = { ...doc.data(), docId: doc.id };
+    });
+
     return NextResponse.json({
       status: 200,
       isUser: true,
       error: false,
-      user: userCredentials.user,
+      user: userData,
     });
     // ...
   } catch (e) {
@@ -45,7 +55,11 @@ export const POST = async (request) => {
     // .catch((err) => {
     // console.log(err);
     // console.log(error.message);
-    return NextResponse.json({ status: 408, user: false, error: true });
+    return NextResponse.json({
+      status: 408,
+      user: false,
+      error: e.message,
+    });
     // router.push("/admin");
     // throw new Error("Failed to fetch data!");
     // });

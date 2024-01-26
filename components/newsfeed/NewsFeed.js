@@ -24,7 +24,7 @@ const NewsFeed = () => {
       <div className="font-bold text-3xl lg:ml-8 mb-6 py-4 border-b-4 border-gray-500">
         Add a Post
       </div>
-      <PostForm />
+      <PostForm onSubmit={getData} />
       <div className="font-bold text-3xl lg:ml-8 mb-6 py-4 border-b-4 border-gray-500">
         Newsfeed
       </div>
@@ -33,6 +33,7 @@ const NewsFeed = () => {
           <Post
             key={post.postId}
             id={post.postId}
+            authorId={post.authorId}
             profilePicture={post.profilePicture}
             email={post.email}
             likes={post.likes}

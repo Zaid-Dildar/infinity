@@ -1,8 +1,7 @@
-import LeftBar from "@/components/sidebars/LeftBar";
+import LeftBar from "@/components/sidebars/leftbar/LeftBar";
 import { Inter } from "next/font/google";
 import "../globals.css";
-import RightBar from "@/components/sidebars/RightBar";
-import ThemeProvider from "../theme-provider";
+import RightBar from "@/components/sidebars/rightbar/RightBar";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,11 +15,9 @@ export default function RootLayout({ children }) {
     <html lang="en" className="bg-background">
       <body className={inter.className}>
         <div className="p-4 mr-2 lg:ml-64 lg:mr-72 mb-10">
-          <ThemeProvider>
-            <LeftBar />
-            <RightBar />
-            {children}
-          </ThemeProvider>
+          <LeftBar />
+          <RightBar />
+          {children}
         </div>
       </body>
     </html>

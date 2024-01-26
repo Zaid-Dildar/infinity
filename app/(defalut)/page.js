@@ -4,7 +4,7 @@ import { Fragment } from "react";
 const Home = () => {
   return (
     <Fragment>
-      <p className="mt-8 lg:mt-0 bg-background font text-5xl font-extrabold leading-normal text-center">
+      <p className="mt-8 lg:mt-16 bg-background font text-5xl font-extrabold leading-normal text-center">
         Join today to share your happiness....
       </p>
       <div className="py-20 lg:py-0">

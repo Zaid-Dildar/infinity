@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
 import { db } from "../../../firebase.config";
 import { NextResponse } from "next/server";
 
@@ -7,14 +7,13 @@ export const GET = async (request) => {
   const userId = searchParams.get("userId");
   let data = [];
   //   let allData = [];
-  let searchData = [];
   try {
     const querySnapshot1 = await getDocs(
-      collection(db, "users", userId, "friends")
+      collection(db, "users", userId, "notifications")
     );
     // console.log(querySnapshot);
     querySnapshot1.forEach((doc) => {
-      searchData.push(doc.data());
+      data.push({ userId: doc.id, ...doc.data() });
     });
 
     // const usersSnapshot = await getDocs(collection(db, "users"));
@@ -22,23 +21,30 @@ export const GET = async (request) => {
     //   allData.push({ id: doc.id, ...doc.data() });
     // });
 
-    console.log(searchData[0].id);
-    const q = query(
-      collection(db, "users"),
-      where("id", "in", searchData[0].id)
-    );
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      data.push(doc.data());
-    });
-
     return NextResponse.json({
       status: 200,
-      usersData: data,
+      notificationsData: data,
       id: userId,
     });
   } catch (e) {
     return NextResponse.json({ status: 408, error: e.message, id: userId });
+  }
+};
+export const POST = async (request) => {
+  const data = await request.json();
+  console.log(data);
+  try {
+    await addDoc(
+      collection(db, "users", data.userId, "notifications"),
+      data.notificationData
+    );
+    return NextResponse.json({ status: 200, notification: true, error: false });
+    // ...
+  } catch (e) {
+    return NextResponse.json({
+      status: 408,
+      error: e.message,
+      id: data.userId,
+    });
   }
 };

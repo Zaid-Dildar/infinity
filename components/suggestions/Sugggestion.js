@@ -1,22 +1,27 @@
 import { Fragment } from "react";
 import Link from "next/link";
 
-const Suggestion = () => {
+const Suggestion = (props) => {
   return (
     <Fragment>
-      <li className="">
+      <li>
         <Link href="#">
-          <div className="p-1 border-b border-gray-500 rounded-xl rounded-b-none flex overflow-y-auto bg-sidebar card dark:bg-gray-800 hover:bg-background dark:hover:bg-gray-700">
+          <div
+            className={`p-1 ${
+              !props.bottom && "border-b border-gray-500"
+            } rounded-xl ${!props.bottom ? "rounded-b-none" : "rounded-t-none"}
+            flex overflow-y-auto bg-sidebar card dark:bg-gray-800 hover:bg-background dark:hover:bg-gray-700`}
+          >
             <img
-              src="Rectangle 2.png"
-              className="mx-1 w-10 h-12 rounded-xl"
+              src={props.profilePic}
+              className="mx-1 w-10 my-auto h-16 rounded-xl"
             ></img>
             <div>
               <div>
                 <h3 className="text-xs font-semibold">
-                  Mike Wallace
+                  {props.name}
                   <div className="text-gray-600 text-xs font-normal">
-                    @gmail.com
+                    {props.email}
                   </div>
                   <span className="text-gray-600 text-xs font-normal">
                     <svg
@@ -32,7 +37,7 @@ const Suggestion = () => {
                         fill="#5F6B88"
                       />
                     </svg>
-                    Islamabad,Pakistan
+                    {props.location}
                   </span>
                 </h3>
               </div>
