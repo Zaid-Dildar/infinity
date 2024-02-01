@@ -18,6 +18,7 @@ const Friends = () => {
     email: "",
     firstName: "",
     id: "",
+    docId: "",
     profession: "",
     profilePic: "",
   });
@@ -36,7 +37,7 @@ const Friends = () => {
     // while (!userData) {
     //   setTimeout(() => {}, 3000);
     // }
-    const response = await fetch(`../../api/friends?userId=${userData.id}`);
+    const response = await fetch(`../../api/friends?userId=${userData.docId}`);
     if (response.ok) {
       const data = await response.json();
       setFriends(data.usersData);

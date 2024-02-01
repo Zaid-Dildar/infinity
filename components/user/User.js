@@ -15,7 +15,7 @@ const User = (props) => {
   return (
     <Fragment>
       <Link href="#">
-        <div className="flex w-full h-32 lg:h-20 m-2 p-1 lg:p-2 bg-sidebar rounded-xl  hover:bg-gray-200 dark:hover:bg-gray-700">
+        <div className="flex w-full h-32 lg:min-h-20 m-2 p-1 lg:p-2 bg-sidebar rounded-xl  hover:bg-gray-200 dark:hover:bg-gray-700">
           <div className="flex my-auto">
             <img
               src={props.profilePic}

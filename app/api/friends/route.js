@@ -14,7 +14,7 @@ export const GET = async (request) => {
     );
     // console.log(querySnapshot);
     querySnapshot1.forEach((doc) => {
-      searchData.push(doc.data());
+      searchData.push(...doc.data().ids);
     });
 
     // const usersSnapshot = await getDocs(collection(db, "users"));
@@ -22,10 +22,10 @@ export const GET = async (request) => {
     //   allData.push({ id: doc.id, ...doc.data() });
     // });
 
-    console.log(searchData[0].id);
+    console.log(searchData);
     const q = query(
       collection(db, "users"),
-      where("id", "in", searchData[0].id)
+      where("id", "in", [...searchData])
     );
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {

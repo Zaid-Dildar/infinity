@@ -1,4 +1,12 @@
-import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  deleteDoc,
+  doc,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "../../../firebase.config";
 import { NextResponse } from "next/server";
 
@@ -13,7 +21,7 @@ export const GET = async (request) => {
     );
     // console.log(querySnapshot);
     querySnapshot1.forEach((doc) => {
-      data.push({ userId: doc.id, ...doc.data() });
+      data.push({ docId: doc.id, ...doc.data() });
     });
 
     // const usersSnapshot = await getDocs(collection(db, "users"));
@@ -45,6 +53,30 @@ export const POST = async (request) => {
       status: 408,
       error: e.message,
       id: data.userId,
+    });
+  }
+};
+export const DELETE = async (request) => {
+  const data = await request.json();
+  console.log("Deleting", data);
+  try {
+    const deleteDocRef = doc(
+      db,
+      "users",
+      data.notificationData.userDocId,
+      "notifications",
+      data.notificationData.notificatoinDocId
+    );
+    console.log(deleteDocRef);
+    await deleteDoc(deleteDocRef);
+
+    return NextResponse.json({ status: 200, deleted: true, error: false });
+    // ...
+  } catch (e) {
+    return NextResponse.json({
+      status: 408,
+      deleted: false,
+      error: e.message,
     });
   }
 };

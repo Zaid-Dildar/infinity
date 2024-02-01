@@ -30,6 +30,11 @@ const RightBar = () => {
       getData();
     }
   }, [storedData]);
+
+  const addFriendHandler = () => {
+    getData();
+  };
+
   return (
     <Fragment>
       <aside
@@ -47,10 +52,13 @@ const RightBar = () => {
                 return (
                   <RightBarRequest
                     key={i}
+                    onAdd={addFriendHandler}
                     id={notification.id}
                     userDocId={storedData.docId}
+                    notificationDocId={notification.docId}
                     userId={storedData.id}
-                    friendId={notification.userId}
+                    friendDocId={notification.senderDocId}
+                    friendId={notification.id}
                     name={notification.name}
                     profilePic={notification.profilePicture}
                     bottom={array.length - 1 === i ? true : false}

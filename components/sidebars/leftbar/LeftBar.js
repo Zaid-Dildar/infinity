@@ -113,7 +113,7 @@ const LeftBar = () => {
           </div>
         </Link>
         <Link href="/profile">
-          <div className="flex ml-4 px-3 py-4 overflow-y-auto rounded-3xl bg-sidebar card dark:bg-gray-800">
+          <div className="flex ml-4 px-3 py-4 overflow-y-auto rounded-3xl rounded-b-lg bg-sidebar card dark:bg-gray-800">
             <img
               src={userData.profilePic}
               className="ml-1 w-10 h-13 rounded-xl"

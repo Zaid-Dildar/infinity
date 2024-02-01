@@ -1,14 +1,46 @@
 import Link from "next/link";
+import { useState } from "react";
 
 const RightBarRequest = (props) => {
+  const [error, setError] = useState(false);
+  const [added, setAdded] = useState(false);
   const addFriendHandler = async () => {
     const response = await fetch("../../api/friends/add", {
       method: "POST",
       body: JSON.stringify({
         userId: props.userId,
-        userdocId: props.userDocId,
+        userDocId: props.userDocId,
         friendId: props.friendId,
-        id: props.id,
+        friendDocId: props.friendDocId,
+        notificationDocId: props.notificationDocId,
+        // id: props.id,
+        action: "add",
+      }),
+      headers: {
+        "CONTENT-TYPE": "application/json",
+      },
+    });
+    const data = await response.json();
+    setAdded(data.added);
+    if (data.added) {
+      alert("Friend added successfully!");
+    }
+    setError(data.error);
+    console.log(data);
+    await delDoc();
+    setAdded(true);
+  };
+  if (error) {
+    alert("Something went wrong!");
+  }
+  const delDoc = async () => {
+    const response = await fetch(`../../api/notifications`, {
+      method: "DELETE",
+      body: JSON.stringify({
+        notificationData: {
+          userDocId: props.userDocId,
+          notificatoinDocId: props.notificationDocId,
+        },
       }),
       headers: {
         "CONTENT-TYPE": "application/json",
@@ -17,6 +49,9 @@ const RightBarRequest = (props) => {
     const data = await response.json();
     console.log(data);
   };
+  if (added) {
+    props.onAdd();
+  }
 
   return (
     <li>

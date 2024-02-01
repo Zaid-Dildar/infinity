@@ -17,6 +17,7 @@ const Search = () => {
         notificationData: {
           name: userData.firstName,
           profilePicture: userData.profilePic,
+          senderDocId: userData.docId,
           request: true,
           id: userData.id,
         },
