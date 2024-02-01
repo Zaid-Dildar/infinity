@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import useInput from "../hooks/useInput";
 import Link from "next/link";
-import { TextInput } from "flowbite-react";
+import { TextInput, Spinner } from "flowbite-react";
 
 const isNotEmpty = (value) => value.trim() !== "";
 const isEmail = (value) => value.includes("@");
@@ -13,6 +13,7 @@ const LoginForm = () => {
   const router = useRouter();
 
   const [isUser, setIsUser] = useState(false);
+  const [loggingUser, setLoggingUser] = useState(false);
   const [error, setError] = useState(false);
 
   const {
@@ -33,6 +34,7 @@ const LoginForm = () => {
   const formIsValid = emailIsValid && passwordIsValid;
   const loginHandler = async (event) => {
     event.preventDefault();
+    setLoggingUser(true);
     if (!formIsValid) {
       return;
     }
@@ -54,6 +56,7 @@ const LoginForm = () => {
       setIsUser(data.isUser);
       console.log(data.user);
       localStorage.setItem("userData", JSON.stringify(data.user));
+      localStorage.setItem("isLoggedIn", true);
     };
     await authenticate(emailValue, passwordValue);
     console.log(error);
@@ -76,6 +79,14 @@ const LoginForm = () => {
         <p className="my-2 text-xs text-red-800 dark:text-red-400 font-semibold font-semiboldfont-semibold">
           *Invalid Credentials! Try again.
         </p>
+      )}
+      {loggingUser && (
+        <div className="flex justify-center mb-5">
+          <div className="text-center">
+            <Spinner size="lg" />
+          </div>
+          <p className="pl-3 text-lg mt-1 text-gray-800">Logging you in.</p>
+        </div>
       )}
       <div className="mb-4">
         <label

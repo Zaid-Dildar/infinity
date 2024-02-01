@@ -49,7 +49,7 @@ const Header = () => {
                 </linearGradient>
               </defs>
             </svg>
-            <h1 className="mt-3 lg:mt-9 text-4xl pb-2 font-bold leading-normal text-transparent lg:text-8xl bg-clip-text bg-gradient-to-b from-black to-red-700">
+            <h1 className="mt-4 ml-1 lg:mt-9 text-4xl pb-2 font-bold leading-normal text-transparent lg:text-8xl bg-clip-text bg-gradient-to-b from-black to-red-700">
               Infinity
             </h1>
           </div>

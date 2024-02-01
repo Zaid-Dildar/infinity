@@ -3,9 +3,15 @@ import { usePathname } from "next/navigation";
 
 const MenuItem = (props) => {
   const pathname = usePathname();
+
+  const logoutHandler = () => {
+    localStorage.removeItem("userData");
+    localStorage.setItem("isLoggedIn", false);
+  };
+
   return (
     <li
-      onClick={props.onClick}
+      onClick={props.text === "Logout" ? logoutHandler : props.onClick}
       className={`${props.bottom ? "border-gray-700 border-b-2" : " "}`}
     >
       <Link

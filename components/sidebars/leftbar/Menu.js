@@ -126,9 +126,33 @@ const Menu = (props) => {
               </svg>
             }
             text={"Search"}
-            bottom={false}
+            bottom={true}
             pathname={"/search"}
             href={"/search"}
+          />
+          <MenuItem
+            onClick={props.onClick}
+            SVG={
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M18 2H12C11.4477 2 11 2.44772 11 3C11 3.55228 11.4477 4 12 4H18C18.5523 4 19 4.44772 19 5V19C19 19.5523 18.5523 20 18 20H12C11.4477 20 11 20.4477 11 21C11 21.5523 11.4477 22 12 22H18C19.1046 22 20 21.1046 20 20V4C20 2.89543 19.1046 2 18 2Z" />
+                <path d="M8 7L3 12L8 17" />
+                <path d="M13 12H3" />
+              </svg>
+            }
+            text={"Logout"}
+            bottom={false}
+            pathname={"/"}
+            href={"/"}
           />
           {/* <MenuItem
             onClick={props.onClick}

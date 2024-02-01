@@ -2,17 +2,21 @@
 
 import { Fragment, useEffect, useState } from "react";
 import Post from "../post/Post";
-import Comments from "../post/Comments";
 import PostForm from "./PostForm";
+import { Spinner } from "flowbite-react";
 
 const NewsFeed = () => {
   const [posts, setPosts] = useState([]);
+  const [gettingPosts, setGettingPosts] = useState(false);
+
   const getData = async () => {
+    setGettingPosts(true);
     const response = await fetch(`../../api/newsfeed`);
     if (response.ok) {
       const data = await response.json();
       console.log(data);
       setPosts(data.postsData);
+      setGettingPosts(false);
     }
   };
 
@@ -28,7 +32,15 @@ const NewsFeed = () => {
       <div className="font-bold text-3xl lg:ml-8 mb-6 py-4 border-b-4 border-gray-500">
         Newsfeed
       </div>
-      {posts.map((post, index) => {
+      {gettingPosts && (
+        <div className="flex justify-center mb-5">
+          <div className="text-center">
+            <Spinner size="lg" />
+          </div>
+          <p className="pl-3 text-lg mt-1 text-gray-800">Fetching Posts!</p>
+        </div>
+      )}
+      {posts.map((post) => {
         return (
           <Post
             key={post.postId}
@@ -36,10 +48,9 @@ const NewsFeed = () => {
             authorId={post.authorId}
             profilePicture={post.profilePicture}
             email={post.email}
-            likes={post.likes}
-            comments={post.comments}
             imageUrl={post.imageUrl}
             caption={post.caption}
+            isImage={post.isImage}
           />
         );
       })}

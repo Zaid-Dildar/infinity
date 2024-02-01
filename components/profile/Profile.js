@@ -3,6 +3,7 @@
 import { Fragment } from "react";
 import Post from "../post/Post";
 import { useState, useEffect } from "react";
+import { Spinner } from "flowbite-react";
 
 const Profile = () => {
   const [storedData, setStoredData] = useState({
@@ -20,13 +21,17 @@ const Profile = () => {
   });
 
   const [posts, setPosts] = useState([]);
+  const [gettingPosts, setGettingPosts] = useState(false);
   const getData = async () => {
+    setGettingPosts(true);
     const response = await fetch(
       `../../api/profile?userId=${storedData.docId}`
     );
     if (response.ok) {
       const data = await response.json();
       setPosts(data.postsData);
+      setGettingPosts(false);
+
       console.log(data);
     }
     console.log(response);
@@ -88,6 +93,16 @@ const Profile = () => {
       <div className="font-bold text-3xl ml-8 my-6 py-4 border-y-4 border-gray-500">
         Timeline
       </div>
+      {gettingPosts && (
+        <div className="flex justify-center mb-5">
+          <div className="text-center">
+            <Spinner size="lg" />
+          </div>
+          <p className="pl-3 text-lg mt-1 text-gray-800">
+            Fetching your Posts!
+          </p>
+        </div>
+      )}
       {posts.map((post, index) => {
         return (
           <Post
@@ -95,14 +110,13 @@ const Profile = () => {
             id={post.postId}
             profilePicture={post.profilePicture}
             email={post.email}
-            likes={post.likes}
-            comments={post.comments}
             imageUrl={post.imageUrl}
             caption={post.caption}
+            isImage={post.isImage}
           />
         );
       })}
-      {posts.length === 0 && (
+      {posts.length === 0 && !gettingPosts && (
         <div>
           <p className="text-center text-lg font-semibold">
             You haven't made any posts yet.

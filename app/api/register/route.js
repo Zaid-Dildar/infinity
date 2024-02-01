@@ -1,4 +1,4 @@
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import { db, auth } from "../../../firebase.config";
 import { NextResponse } from "next/server";
 import { createUserWithEmailAndPassword } from "firebase/auth";
@@ -8,6 +8,8 @@ export const POST = async (request) => {
   const { email } = data;
   const { password } = data;
   const { userData } = data;
+  let userDataReturned = {};
+
   try {
     const userCredentials = await createUserWithEmailAndPassword(
       auth,
@@ -22,13 +24,13 @@ export const POST = async (request) => {
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
-      userData = { ...doc.data(), docId: doc.id };
+      userDataReturned = { ...doc.data(), docId: doc.id };
     });
 
     return NextResponse.json({
       status: 200,
       user: true,
-      userData: userData,
+      userData: userDataReturned,
       error: false,
     });
     // ...
@@ -37,7 +39,12 @@ export const POST = async (request) => {
     // .catch((err) => {
     // console.log(e);
     // console.log(e.message);
-    return NextResponse.json({ status: 408, user: false, error: e.message });
+    return NextResponse.json({
+      status: 408,
+      user: false,
+      error: true,
+      errorMessage: e.message,
+    });
     // router.push("/admin");
     // throw new Error("Failed to fetch data!");
     // });

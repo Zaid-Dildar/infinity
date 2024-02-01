@@ -3,10 +3,13 @@ import Link from "next/link";
 import { Fragment } from "react";
 import { useState, useEffect } from "react";
 import Menu from "./Menu";
-import Suggestion from "../../suggestions/Sugggestion";
 import Suggestions from "./Suggestions";
 
 const LeftBar = () => {
+  useEffect(() => {
+    setUserdData(JSON.parse(localStorage.getItem("userData")));
+  }, []);
+
   const [userData, setUserdData] = useState({
     lastName: "",
     birth: "",
@@ -22,9 +25,6 @@ const LeftBar = () => {
   });
 
   const [show, setShow] = useState(false);
-  useEffect(() => {
-    setUserdData(JSON.parse(localStorage.getItem("userData")));
-  }, []);
 
   const sidebarToggleHandler = () => {
     setShow((prevShow) => !prevShow);

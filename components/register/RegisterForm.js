@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Datepicker } from "flowbite-react";
+import { Alert, Datepicker, Spinner } from "flowbite-react";
 import { TextInput, FileInput, Label } from "flowbite-react";
 import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
@@ -13,7 +13,9 @@ const isEmail = (value) => value.includes("@");
 
 const RegisterForm = () => {
   const [user, setUser] = useState(false);
+  const [creatingUser, setCreatingUser] = useState(false);
   const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [birthValue, setBirthValue] = useState(false);
 
   const router = useRouter();
@@ -100,6 +102,7 @@ const RegisterForm = () => {
 
   const registerHandler = async (event) => {
     event.preventDefault();
+    setCreatingUser(true);
     const formData = new FormData();
     formData.append("file", profileUrl.current.files[0]);
 
@@ -124,6 +127,8 @@ const RegisterForm = () => {
     const createUser = async (email, password) => {
       console.log(email);
       console.log(password);
+      console.log(profilePicUrl);
+      console.log(coverPhotoUrl);
       const response = await fetch(`../../api/register`, {
         method: "POST",
         body: JSON.stringify({
@@ -150,9 +155,18 @@ const RegisterForm = () => {
       const data = await response.json();
       console.log(data);
 
-      setError(data.error);
+      if (data.error) {
+        setError(data.error);
+        setTimeout(() => {
+          setError(false);
+        }, 3000);
+        setCreatingUser(false);
+        setErrorMessage(data.errorMessage);
+      }
       setUser(data.user);
       localStorage.setItem("userData", JSON.stringify(data.userData));
+      localStorage.setItem("isLoggedIn", true);
+      setCreatingUser(false);
     };
     await createUser(emailValue, passwordValue);
   };
@@ -162,6 +176,19 @@ const RegisterForm = () => {
   }
   return (
     <form className=" bg-sidebar rounded-xl max-w-screen-md p-4 m-2 mx-2 md:mx-auto">
+      {error && (
+        <Alert className="rounded-3xl mb-6 p-4" color="failure">
+          <span className="font-medium">{errorMessage}</span>
+        </Alert>
+      )}
+      {creatingUser && (
+        <div className="flex justify-center mb-5">
+          <div className="text-center">
+            <Spinner size="lg" />
+          </div>
+          <p className="pl-3 text-lg mt-1 text-gray-800">Registering you.</p>
+        </div>
+      )}
       <div className="grid lg:grid-cols-2 lg:gap-6">
         <div className="relative z-0 w-full group">
           <label
@@ -281,7 +308,7 @@ const RegisterForm = () => {
         </div>
         <div className="relative z-0 w-full group">
           <label
-            htmlFor="password"
+            htmlFor="country"
             className="block text-sm font-medium text-gray-900 dark:text-white"
           >
             Country
@@ -329,6 +356,7 @@ const RegisterForm = () => {
             Date of Birth
           </label>
           <Datepicker
+            id="dob"
             className="my-2"
             onSelectedDateChanged={(date) => setBirthValue(date)}
           />
@@ -380,11 +408,21 @@ const RegisterForm = () => {
       <div className="grid lg:grid-cols-2 lg:gap-6 mt-1">
         <div className="relative z-0 w-full group">
           <Label htmlFor="profilePic" value="Profile Picture" />
-          <FileInput ref={profileUrl} id="profilePic" />
+          <FileInput
+            ref={profileUrl}
+            id="profilePic"
+            helperText="JPEG, JPG, PNG"
+            accept=".jpeg,.jpg,.png"
+          />
         </div>
         <div className="relative z-0 w-full group">
           <Label htmlFor="coverPhoto" value="Cover Photo" />
-          <FileInput ref={coverUrl} id="coverPhoto" />
+          <FileInput
+            ref={coverUrl}
+            id="coverPhoto"
+            helperText="JPEG, JPG, PNG"
+            accept=".jpeg,.jpg,.png"
+          />
         </div>
       </div>
       <div className="bg-sidebar flex pt-4">

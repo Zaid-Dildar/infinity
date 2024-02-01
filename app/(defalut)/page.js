@@ -17,7 +17,7 @@ const Home = () => {
           </p>
           <Link
             href="/register"
-            className="w-60 h-20 mx-auto lg:mx-0 bg-gradient-to-b from-black to-red-700 rounded-3xl"
+            className="w-60 h-20 mx-auto lg:mx-0 bg-gradient-to-b from-black to-red-700 rounded-3xl hover:to-red-800"
           >
             <p className="mt-3 text-center text-white font-semibold text-4xl leading-normal">
               Join Now !
