@@ -7,7 +7,7 @@ const VideoBackground = (props) => {
     <div
       className={`${styles["video-background"]} flex w-lg max-h-48 lg:min-h-72 rounded-3xl bg-cover bg-center bg-background bg-no-repeat mb-0 `}
     >
-      <video autoPlay controls className={styles.video}>
+      <video controls className={styles.video}>
         <source src={props.imageUrl} type="video/mp4" />
         Your browser does not support the video tag.
       </video>

@@ -2,7 +2,6 @@ import Link from "next/link";
 import { useState } from "react";
 
 const RightBarRequest = (props) => {
-  const [error, setError] = useState(false);
   const [added, setAdded] = useState(false);
   const addFriendHandler = async () => {
     const response = await fetch("../../api/friends/add", {
@@ -13,8 +12,7 @@ const RightBarRequest = (props) => {
         friendId: props.friendId,
         friendDocId: props.friendDocId,
         notificationDocId: props.notificationDocId,
-        // id: props.id,
-        action: "add",
+        // action: "add",
       }),
       headers: {
         "CONTENT-TYPE": "application/json",
@@ -25,14 +23,14 @@ const RightBarRequest = (props) => {
     if (data.added) {
       alert("Friend added successfully!");
     }
-    setError(data.error);
+    if (data.error) {
+      alert("Something went wrong!");
+    }
     console.log(data);
     await delDoc();
     setAdded(true);
   };
-  if (error) {
-    alert("Something went wrong!");
-  }
+
   const delDoc = async () => {
     const response = await fetch(`../../api/notifications`, {
       method: "DELETE",
