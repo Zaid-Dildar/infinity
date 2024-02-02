@@ -25,11 +25,30 @@ const Friends = () => {
   const [friends, setFriends] = useState([]);
   const [removed, setRemoved] = useState(false);
 
-  const removeHandler = () => {
-    setRemoved(true);
-    setTimeout(() => {
-      setRemoved(false);
-    }, 3000);
+  const removeHandler = async (id, docId) => {
+    const response = await fetch("../../api/friends/remove", {
+      method: "POST",
+      body: JSON.stringify({
+        userId: userData.Id,
+        userDocId: userData.docId,
+        friendId: id,
+        friendDocId: docId,
+      }),
+      headers: {
+        "CONTENT-TYPE": "application/json",
+      },
+    });
+    const data = await response.json();
+    if (data.removed) {
+      setRemoved(true);
+      setTimeout(() => {
+        setRemoved(false);
+      }, 3000);
+    }
+    if (data.error) {
+      alert("Something went wrong!");
+    }
+    console.log(data);
   };
 
   const getUserData = async () => {
@@ -66,6 +85,8 @@ const Friends = () => {
             <User
               key={i}
               add={true}
+              id={friend.id}
+              docId={friend.docId}
               email={friend.email}
               onClick={removeHandler}
               profession={friend.profession}
@@ -76,13 +97,14 @@ const Friends = () => {
             />
           );
         })}
-      {friends === undefined && (
-        <div>
-          <p className="text-center text-lg font-semibold">
-            You don't have any friends yet.
-          </p>
-        </div>
-      )}
+      {friends === undefined ||
+        (friends.length === 0 && (
+          <div>
+            <p className="text-center text-lg font-semibold">
+              You don't have any friends yet.
+            </p>
+          </div>
+        ))}
     </Fragment>
   );
 };

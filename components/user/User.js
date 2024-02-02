@@ -57,7 +57,11 @@ const User = (props) => {
           </div>
           <div className="ml-auto lg:my-auto flex lg:h-10 lg:w-72 max-lg:flex-col">
             <button
-              onClick={props.onClick.bind(null, props.id)}
+              onClick={
+                props.add
+                  ? props.onClick.bind(null, props.id, props.docId)
+                  : props.onClick.bind(null, props.id)
+              }
               className="max-md:max-w-20 block lg:block my-auto p-2 rounded-3xl bg-gradient-to-b from-black to-red-700 hover:to-red-900 ml-4 lg:ml-auto mr-2"
             >
               <p className="text-center text-white font-semibold text-xs lg:text-sm leading-normal">
