@@ -14,10 +14,10 @@ export const POST = async (request) => {
   console.log(data);
   try {
     await addDoc(collection(db, "users", data.userDocId, "friends"), {
-      ids: [data.friendId],
+      ids: data.friendId,
     });
     await addDoc(collection(db, "users", data.friendDocId, "friends"), {
-      ids: [data.userId],
+      ids: data.userId,
     });
     return NextResponse.json({ status: 200, added: true, error: false });
     //   } else

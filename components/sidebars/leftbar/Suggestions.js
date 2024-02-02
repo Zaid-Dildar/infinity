@@ -20,7 +20,7 @@ const Suggestions = (props) => {
   const getData = async () => {
     console.log(userData.city);
     const response = await fetch(
-      `../../api/suggestion?searchValue=${userData.city}`
+      `../../api/suggestion?searchValue=${userData.city}&userDocId=${userData.docId}`
     );
     if (response.ok) {
       const data = await response.json();
@@ -48,6 +48,12 @@ const Suggestions = (props) => {
                 user.email !== userData.email && (
                   <Suggestion
                     key={user.id}
+                    userId={userData.id}
+                    senderFirstName={userData.firstName}
+                    senderProfilePic={userData.profilePic}
+                    userDocId={userData.docId}
+                    friendId={user.id}
+                    friendDocId={user.docId}
                     name={`${user.firstName} ${user.lastName}`}
                     email={user.email}
                     location={`${user.city}, ${user.country}`}

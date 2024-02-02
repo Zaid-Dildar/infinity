@@ -2,6 +2,28 @@ import { Fragment } from "react";
 import Link from "next/link";
 
 const Suggestion = (props) => {
+  const addHandler = async () => {
+    const response = await fetch(`../../api/notifications`, {
+      method: "POST",
+      body: JSON.stringify({
+        notificationData: {
+          name: props.senderFirstName,
+          profilePicture: props.senderProfilePic,
+          senderDocId: props.userDocId,
+          request: true,
+          id: props.userId,
+        },
+        userId: props.friendDocId,
+      }),
+      headers: {
+        "CONTENT-TYPE": "application/json",
+      },
+    });
+    const data = await response.json();
+    console.log(data);
+    alert("Request sent!");
+  };
+
   return (
     <Fragment>
       <li>
@@ -42,7 +64,10 @@ const Suggestion = (props) => {
                 </h3>
               </div>
               <div className="flex justify-around">
-                <button className="px-5 py-1 rounded-xl text-xs font-bold text-white bg-gradient-to-b from-black to-red-700 hover:to-red-900">
+                <button
+                  onClick={addHandler}
+                  className="px-5 py-1 rounded-xl text-xs font-bold text-white bg-gradient-to-b from-black to-red-700 hover:to-red-900"
+                >
                   Add
                 </button>
                 <button className="px-3 py-1 rounded-xl border border-gray-500 text-xs font-bold hover:bg-gray-500">
