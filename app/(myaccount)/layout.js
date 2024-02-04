@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "Infinity",
   description:
-    "A Social media platform for random people from different conrers of the world to socialize with each other.",
+    "A Social media platform for random people from different corners of the world to socialize with each other.",
 };
 
 export default function RootLayout({ children }) {
