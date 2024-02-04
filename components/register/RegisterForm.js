@@ -12,7 +12,6 @@ const isNotEmpty = (value) => value.trim() !== "";
 const isEmail = (value) => value.includes("@");
 
 const RegisterForm = () => {
-  const [user, setUser] = useState(false);
   const [creatingUser, setCreatingUser] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -163,17 +162,16 @@ const RegisterForm = () => {
         setCreatingUser(false);
         setErrorMessage(data.errorMessage);
       }
-      setUser(data.user);
       localStorage.setItem("userData", JSON.stringify(data.userData));
       localStorage.setItem("isLoggedIn", true);
       setCreatingUser(false);
+      if (data.user) {
+        router.push("/profile");
+      }
     };
     await createUser(emailValue, passwordValue);
   };
 
-  if (user) {
-    router.replace("/newsfeed");
-  }
   return (
     <form className=" bg-sidebar rounded-xl max-w-screen-md p-4 m-2 mx-2 md:mx-auto">
       {error && (

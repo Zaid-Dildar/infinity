@@ -67,7 +67,6 @@ export const DELETE = async (request) => {
       "notifications",
       data.notificationData.notificatoinDocId
     );
-    console.log(deleteDocRef);
     await deleteDoc(deleteDocRef);
 
     return NextResponse.json({ status: 200, deleted: true, error: false });

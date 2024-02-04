@@ -29,7 +29,7 @@ const Friends = () => {
     const response = await fetch("../../api/friends/remove", {
       method: "POST",
       body: JSON.stringify({
-        userId: userData.Id,
+        userId: userData.id,
         userDocId: userData.docId,
         friendId: id,
         friendDocId: docId,
@@ -48,7 +48,7 @@ const Friends = () => {
     if (data.error) {
       alert("Something went wrong!");
     }
-    console.log(data);
+    getUserData();
   };
 
   const getUserData = async () => {

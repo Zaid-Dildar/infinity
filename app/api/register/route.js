@@ -26,14 +26,14 @@ export const POST = async (request) => {
       // doc.data() is never undefined for query doc snapshots
       userDataReturned = { ...doc.data(), docId: doc.id };
     });
-
-    return NextResponse.json({
+    const response = NextResponse.json({
       status: 200,
       user: true,
       userData: userDataReturned,
       error: false,
     });
-    // ...
+    response.cookies.set("isLoggedIn", true);
+    return response;
   } catch (e) {
     // })
     // .catch((err) => {

@@ -1,20 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useRouter } from "next/navigation";
 import useInput from "../hooks/useInput";
 import Link from "next/link";
-import { TextInput, Spinner } from "flowbite-react";
+import { TextInput, Spinner, Alert } from "flowbite-react";
+
+// export async function getServerSideProps(context) {
+//   // Access cookies from the request headers
+//   const cookies = context.req.cookie || "";
+//   const parsedCookies = cookies.split(";").reduce((acc, cookie) => {
+//     const [key, value] = cookie.trim().split("=");
+//     acc[key] = decodeURIComponent(value);
+//     return acc;
+//   }, {});
+//   // const cookies = req.cookies;
+//   console.log(cookies);
+//   return {
+//     props: {
+//       cookies: cookies,
+//     },
+//   };
+// }
 
 const isNotEmpty = (value) => value.trim() !== "";
 const isEmail = (value) => value.includes("@");
 
-const LoginForm = () => {
+const LoginForm = (props) => {
   const router = useRouter();
 
-  const [isUser, setIsUser] = useState(false);
+  // const [isUser, setIsUser] = useState(false);
+
+  const [tried, setTried] = useState(props.tried);
   const [loggingUser, setLoggingUser] = useState(false);
   const [error, setError] = useState(false);
+
+  setTimeout(() => {
+    setTried(false);
+  }, 3000);
 
   const {
     value: passwordValue,
@@ -53,13 +76,18 @@ const LoginForm = () => {
       console.log(data);
 
       setError(data.error);
-      setIsUser(data.isUser);
+      // setIsUser(data.isUser);
       console.log(data.user);
       localStorage.setItem("userData", JSON.stringify(data.user));
-      localStorage.setItem("isLoggedIn", true);
+      setLoggingUser(false);
+      if (data.isUser) {
+        // console.log("true");
+        router.push("/profile");
+      }
     };
     await authenticate(emailValue, passwordValue);
     console.log(error);
+
     // const getData = async () => {
     //   const response = await fetch(`../../api/login`);
     //   if (response.ok) {
@@ -70,89 +98,104 @@ const LoginForm = () => {
     // };
     // getData();
   };
-  if (isUser) {
-    router.push("/profile");
-  }
+  // if (isUser) {
+  //   console.log("true");
+  //   // router.push("/profile");
+  // }
+
   return (
-    <form className="max-w-sm bg-sidebar rounded-xl p-4 m-2 mx-2 md:mx-auto">
-      {error && (
-        <p className="my-2 text-xs text-red-800 dark:text-red-400 font-semibold font-semiboldfont-semibold">
-          *Invalid Credentials! Try again.
-        </p>
+    <Fragment>
+      {tried === "true" && (
+        <Alert
+          className="max-w-sm rounded-xl p-4 m-2 mx-2 md:mx-auto"
+          color="failure"
+        >
+          <span className="font-medium">You aren't logged in!</span>
+        </Alert>
       )}
-      {loggingUser && (
-        <div className="flex justify-center mb-5">
-          <div className="text-center">
-            <Spinner size="lg" />
+
+      <form className="max-w-sm bg-sidebar rounded-xl p-4 m-2 mx-2 md:mx-auto">
+        {error && (
+          <p className="my-2 text-xs text-red-800 dark:text-red-400 font-semibold font-semiboldfont-semibold">
+            *Invalid Credentials! Try again.
+          </p>
+        )}
+        {loggingUser && (
+          <div className="flex justify-center mb-5">
+            <div className="text-center">
+              <Spinner size="lg" />
+            </div>
+            <p className="pl-3 text-lg mt-1 text-gray-800">Logging you in.</p>
           </div>
-          <p className="pl-3 text-lg mt-1 text-gray-800">Logging you in.</p>
+        )}
+        <div className="mb-4">
+          <label
+            htmlFor="email"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Your email
+          </label>
+          <TextInput
+            type="email"
+            id="email"
+            className=""
+            placeholder="name@gmail.com"
+            value={emailValue}
+            onChange={emailChangeHandler}
+            onBlur={emailBlurHandler}
+            color={`${!emailHasError ? "" : "failure"}`}
+            helperText={`${!emailHasError ? "" : "Email invallid!"}`}
+            required
+          />
         </div>
-      )}
-      <div className="mb-4">
-        <label
-          htmlFor="email"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          Your email
-        </label>
-        <TextInput
-          type="email"
-          id="email"
-          className=""
-          placeholder="name@gmail.com"
-          value={emailValue}
-          onChange={emailChangeHandler}
-          onBlur={emailBlurHandler}
-          color={`${!emailHasError ? "" : "failure"}`}
-          helperText={`${!emailHasError ? "" : "Email invallid!"}`}
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label
-          htmlFor="password"
-          className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-        >
-          Your password
-        </label>
-        <TextInput
-          type="password"
-          id="password"
-          className=""
-          placeholder="password"
-          value={passwordValue}
-          onChange={passwordChangeHandler}
-          onBlur={passwordBlurHandler}
-          color={`${!passwordHasError ? "" : "failure"}`}
-          helperText={`${!passwordHasError ? "" : "Password invallid!"}`}
-          required
-        />
-      </div>
-      <div className="bg-sidebar flex flex-row-reverse pt-4">
-        <p className="max-lg:hidden mt-auto mb-2 ml-2 text-black font-bold text-2xl leading-normal mr-20">
+        <div className="mb-4">
+          <label
+            htmlFor="password"
+            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Your password
+          </label>
+          <TextInput
+            type="password"
+            id="password"
+            className=""
+            placeholder="password"
+            value={passwordValue}
+            onChange={passwordChangeHandler}
+            onBlur={passwordBlurHandler}
+            color={`${!passwordHasError ? "" : "failure"}`}
+            helperText={`${!passwordHasError ? "" : "Password invallid!"}`}
+            required
+          />
+        </div>
+        <div className="bg-sidebar flex flex-row-reverse pt-4">
+          <p className="max-lg:hidden mt-auto mb-2 ml-2 text-black font-bold text-2xl leading-normal mr-20">
+            OR{" "}
+            <Link href="/register" className="underline">
+              Register
+            </Link>
+          </p>
+          <button
+            className={`w-60 h-20 bg-gradient-to-b from-black to-red-700 rounded-3xl  ${
+              !formIsValid
+                ? "cursor-not-allowed opacity-80"
+                : "hover:to-red-800"
+            }`}
+            onClick={loginHandler}
+          >
+            <p className="text-center text-white font-semibold text-4xl leading-normal">
+              Login
+            </p>
+          </button>
+        </div>
+        <p className="lg:hidden mt-4 text-center text-black font-bold text-2xl leading-normal lg:pb-60">
           OR{" "}
           <Link href="/register" className="underline">
             Register
           </Link>
         </p>
-        <button
-          className={`w-60 h-20 bg-gradient-to-b from-black to-red-700 rounded-3xl  ${
-            !formIsValid ? "cursor-not-allowed opacity-80" : "hover:to-red-800"
-          }`}
-          onClick={loginHandler}
-        >
-          <p className="text-center text-white font-semibold text-4xl leading-normal">
-            Login
-          </p>
-        </button>
-      </div>
-      <p className="lg:hidden mt-4 text-center text-black font-bold text-2xl leading-normal lg:pb-60">
-        OR{" "}
-        <Link href="/register" className="underline">
-          Register
-        </Link>
-      </p>
-    </form>
+      </form>
+    </Fragment>
   );
 };
 

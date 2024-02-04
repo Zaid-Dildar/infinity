@@ -14,19 +14,19 @@ export const POST = async (request) => {
   const data = await request.json();
   console.log("Deleting", data);
   try {
-    const querySnapshot1 = await getDocs(
+    const q = query(
       collection(db, "users", data.userDocId, "friends"),
       where("ids", "==", data.friendId)
     );
-    // console.log(querySnapshot);
+    const querySnapshot1 = await getDocs(q);
     querySnapshot1.forEach((doc) => {
       deleteDoc(doc.ref);
     });
-    const querySnapshot2 = await getDocs(
+    const q1 = query(
       collection(db, "users", data.friendDocId, "friends"),
-      where("ids", "==", data.friendId)
+      where("ids", "==", data.userId)
     );
-    // console.log(querySnapshot);
+    const querySnapshot2 = await getDocs(q1);
     querySnapshot2.forEach((doc) => {
       deleteDoc(doc.ref);
     });

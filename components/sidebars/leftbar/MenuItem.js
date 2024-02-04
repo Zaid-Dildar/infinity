@@ -6,7 +6,8 @@ const MenuItem = (props) => {
 
   const logoutHandler = () => {
     localStorage.removeItem("userData");
-    localStorage.setItem("isLoggedIn", false);
+    const response = fetch("../../../api/logout");
+    console.log(response);
   };
 
   return (
