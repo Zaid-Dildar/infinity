@@ -59,7 +59,6 @@ const LeftBar = () => {
         className={`fixed top-0 pr-2 border-r-4 border-r-gray-600 left-0 z-40 w-64 overflow-y-auto h-screen transition-transform ${
           !show ? "-translate-x-full" : " "
         } lg:translate-x-0 bg-background`}
-        onBlur={sidebarToggleHandler}
         aria-label="Sidebar"
       >
         <Link href="/">
@@ -112,7 +111,7 @@ const LeftBar = () => {
             </h1>
           </div>
         </Link>
-        <Link href="/profile">
+        <Link href="/profile" onClick={sidebarToggleHandler}>
           <div className="flex ml-4 px-3 py-4 overflow-y-auto rounded-3xl rounded-b-lg bg-sidebar card dark:bg-gray-800">
             <img
               src={userData.profilePic}
